@@ -4,10 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 
 class Feed extends Model
 {
     use HasFactory;
+
+    protected $keyType = 'string';
+
+    protected static function booted()
+    {
+        static::creating(fn(Feed $feed) => $feed->id = (string) Uuid::uuid4());
+    }
 
     /**
      * The attributes that are mass assignable.

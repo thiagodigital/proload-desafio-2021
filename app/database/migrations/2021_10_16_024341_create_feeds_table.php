@@ -14,7 +14,7 @@ class CreateFeedsTable extends Migration
     public function up()
     {
         Schema::create('feeds', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->text('description');
             $table->dateTime('pubDate');
@@ -22,7 +22,6 @@ class CreateFeedsTable extends Migration
             $table->string('guid');
             $table->string('link');
             $table->integer('status')->default(0);
-            $table->timestamps();
         });
     }
 
