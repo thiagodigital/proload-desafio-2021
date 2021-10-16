@@ -1,0 +1,56 @@
+version: '3.7'
+services:
+  app:
+    container_name: proload_app
+    build:
+      context: app
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_DATABASE: dbapp
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    volumes:
+      - ./app:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - rede
+  redis:
+    container_name: proload_fila
+    image: redis
+    command: redis-server --requirepass Password!
+    ports:
+      - 6379:6379
+    networks:
+      - rede
+  mailhog:
+    container_name: proload_mail
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - 1025:1025
+      - 8025:8025
+    depends_on:
+      - app
+    networks:
+      - rede
+  db:
+    container_name: proload_db
+    image: mysql:5.7.22
+    environment:
+      MYSQL_DATABASE: dbapp
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - .dbdata:/var/lib/mysql
+    ports:
+      - 33066:3306
+    networks:
+      - rede
+networks:
+  rede:
