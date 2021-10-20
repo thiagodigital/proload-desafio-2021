@@ -17,7 +17,6 @@ class CreateAudiencesTable extends Migration
             $table->id();
             $table->uuid('subscriber_id');
             $table->uuid('feed_id');
-            $table->timestamps();
         });
     }
 

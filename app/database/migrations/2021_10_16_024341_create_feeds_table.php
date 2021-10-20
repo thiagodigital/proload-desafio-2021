@@ -20,7 +20,6 @@ class CreateFeedsTable extends Migration
             $table->dateTime('pubDate');
             $table->text('image');
             $table->string('guid');
-            $table->string('link');
             $table->integer('status')->default(0);
         });
     }

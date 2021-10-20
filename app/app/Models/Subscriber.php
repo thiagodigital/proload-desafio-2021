@@ -45,9 +45,13 @@ class Subscriber extends Model
         'status' => 'boolean',
     ];
 
-
     public function feeds()
     {
-        return $this->hasMany(\App\Models\Feed::class);
+        return $this->belongsToMany(Feed::class, 'audiences');
+    }
+
+    public function audience()
+    {
+        return $this->hasMany(Audience::class);
     }
 }

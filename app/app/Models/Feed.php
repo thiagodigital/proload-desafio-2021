@@ -10,11 +10,19 @@ class Feed extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $keyType = 'string';
 
     protected static function booted()
     {
         static::creating(fn(Feed $feed) => $feed->id = (string) Uuid::uuid4());
+    }
+
+    public static function findOrCreate($title)
+    {
+        $feed = static::where('title', $title)->first();
+        return $feed ? $feed : new static;
     }
 
     /**
@@ -28,7 +36,6 @@ class Feed extends Model
         'pubDate',
         'image',
         'guid',
-        'link',
         'status',
     ];
 
@@ -44,6 +51,6 @@ class Feed extends Model
 
     public function subscribers()
     {
-        return $this->belongsToMany(\App\Models\Subscriber::class);
+        return $this->hasMany(Subscriber::class);
     }
 }
