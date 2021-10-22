@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\SaveFeedEvent;
 use App\Http\Requests\SubscriberRequest;
 use App\Models\Audience;
 use App\Models\Subscriber;
@@ -173,5 +174,32 @@ class SubscriberCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    public function store()
+    {
+
+        $this->crud->hasAccessOrFail('create');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+
+        // insert item in the db
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        //envia a lista de feeds
+        event(new SaveFeedEvent());
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
+
 
 }
